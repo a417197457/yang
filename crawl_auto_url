@@ -1,0 +1,39 @@
+import pymongo
+import re
+import requests
+client = pymongo.MongoClient('localhost', 27017)
+url_news = client['url_news']
+url_car2 = url_news['url_car2']
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+data = [
+    {'url':'http://channel.chinanews.com/cns/s/channel:auto.shtml?pager='}
+]
+
+def get_auto2_url(u,w):
+    count = 0
+    for i in range(u, w):
+        try:
+            url = data[0]['url'] + str(i) + '&pagenum=1&_=1509946469251'
+            #print(url)
+            # time.sleep(1)
+            wb_json = requests.get(url,headers=headers).text
+            # print(wb_json)
+            #print(wb_json)
+            #time.sleep(1)
+            # text = str(json.loads(wb_json))
+            #print(text)
+            auto_url = re.findall(r"(\"url\" : )(\".*\")", str(wb_json))[0][1]
+            # print(auto_url)
+            url_car2.insert_one({'url':auto_url})
+            count = count + 1
+            print("\r当前进度: {:.2f}%".format(count * 100 / 60000), end="")
+        except:
+            count = count + 1
+            print("\r当前进度: {:.2f}%".format(count * 100 / 60000), end="")
+            print("获取url失败")
+
+if __name__ == '__main__':
+    print(url_car2.find().count())
+    # get_auto2_url(0,60000)
