@@ -1,0 +1,160 @@
+from bs4 import BeautifulSoup
+import requests
+import pymongo
+import multiprocessing
+
+client = pymongo.MongoClient('localhost', 27017)
+sohu_news = client['sohu_news']
+caijing_news = sohu_news['caijing_news']
+junshi_news = sohu_news['junshi_news']
+keji_news = sohu_news['keji_news']
+shishang_news = sohu_news['shishang_news']
+tiyu_news = sohu_news['tiyu_news']
+yule_news = sohu_news['yule_news']
+xingzuo_news = sohu_news['xingzuo_news']
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+
+def get_mess_news(url, cate):
+    try:
+        wb_data = requests.get(url, headers=headers)
+    except:
+        pass
+    try:
+        soup = BeautifulSoup(wb_data.text, 'lxml')
+        if soup.find('article'):
+            titles = soup.select('section.article-wrapper > article > h1.h1')[0].text
+            styles = soup.select('a.title.fl')[0].text
+            paras = soup.select('p.para')
+            for j in range(len(paras)):
+                paras[j] = paras[j].text
+                paras[j] = str(paras[j])
+            content = " ".join(paras)
+            cate.insert_one({'style': styles, 'title': titles, 'content': content})
+            # print({'style': styles, 'title': titles, 'content': content})
+            # print(sohunews.find().count())
+        else:
+            print("404 not find!")
+    except:
+        pass
+
+
+def get_list(list, a, b):
+    return list[a:b]
+
+
+# def get_caijing(u,w):
+#     conn = pymongo.MongoClient('localhost', 27017)
+#     url = conn.url_news.caijing
+#     a = []
+#     for i in url.find():
+#         a.append(i)
+#     a1 = get_list(a, u, w)
+#     for i in a1:
+#         print(i['url'])
+# get_mess_news(i['url'],caijing_news)
+
+def get_junshi(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.junshi
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        #         print(i['url'])
+        get_mess_news(i['url'], junshi_news)
+
+
+#
+def get_keji(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.keji
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        # print(i['url'])
+        get_mess_news(i['url'], keji_news)
+
+
+#
+def get_shishang(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.shishang
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        #         print(i['url'])
+        get_mess_news(i['url'], shishang_news)
+
+
+#
+def get_tiyu(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.url_tiyu
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        #         print(i['url'])
+        get_mess_news(i['url'], tiyu_news)
+
+
+#
+#
+def get_yule(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.url_yule
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        #         print(i['url'])
+        get_mess_news(i['url'], yule_news)
+
+
+def get_xingzuo(u, w):
+    conn = pymongo.MongoClient('localhost', 27017)
+    url = conn.url_news.xingzuo
+    a = []
+    for i in url.find():
+        a.append(i)
+    a1 = get_list(a, u, w)
+    for i in a1:
+        #         print(i['url'])
+        get_mess_news(i['url'], xingzuo_news)
+
+
+if __name__ == '__main__':
+    get_xingzuo(140001,150000)
+    # try:
+        # t1 = multiprocessing.Process(target=get_caijing, args=(10105, 20000))
+        # t1.start()
+        # t2 = multiprocessing.Process(target=get_junshi, args=(100001, 105000))
+        # t2.start()
+        # t3 = multiprocessing.Process(target=get_keji, args=(100001, 105000))
+        # t3.start()
+        # t4 = multiprocessing.Process(target=get_shishang, args=(100001, 110000))
+        # t4.start()
+        # t5 = multiprocessing.Process(target=get_tiyu, args=(100001, 110000))
+        # t5.start()
+        # t6 = multiprocessing.Process(target=get_xingzuo, args=(100001, 110000))
+        # t6.start()
+        # t7 = multiprocessing.Process(target=get_yule, args=(100001, 110000))
+        # t7.start()
+        # while t2.is_alive() | t3.is_alive() | t4.is_alive() | t5.is_alive() | t6.is_alive() | t7.is_alive():
+        #     pass
+    # except:
+    #     print("Error: 无法启动线程")
+
+        # sohunews.remove()
+        # pool = Pool()
+        # pool.map(OK,[10000,20000,30000,40000])
+        # OK(0, 100)
