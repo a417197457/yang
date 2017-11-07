@@ -1,0 +1,18 @@
+import time
+# from get_163url import url_cul
+from get_auto_data import car_news
+# from get_163url import url_life
+# from get_url import url_shishang
+# from get_url import url_keji
+# from get_url import url_junshi
+# from get_url import url_xingzuo
+
+while True:
+    # print('文化:' +str(url_cul.find().count()))
+    print('汽车:' + str(car_news.find().count()))
+    # print('生活:' + str(url_life.find().count()) + '\n')
+    # print('时尚:' + str(url_shishang.find().count()))
+    # print('科技:' + str(url_keji.find().count()))
+    # print('军事:' + str(url_junshi.find().count()))
+    # print('星座:' + str(url_xingzuo.find().count()) + '\n')
+    time.sleep(5)
