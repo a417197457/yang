@@ -1,0 +1,65 @@
+import requests
+import json
+import re
+import pymongo
+import _thread
+import time
+from threading import Thread
+
+client = pymongo.MongoClient('localhost', 27017)
+url_news = client['url_news']
+url_tiyu = url_news['url_tiyu']
+url_yule = url_news['url_yule']
+url_caijing = url_news['caijing']
+url_shishang = url_news['shishang']
+url_keji = url_news['keji']
+url_junshi = url_news['junshi']
+url_xingzuo = url_news['xingzuo']
+data = [
+    {'url':'https://m.sohu.com/api/cl/'}
+]
+
+def get_end_url(num ,pages, url_):
+    for i in range(0, pages):
+        try:
+            url = data[0]['url'] + str(num) + '/?&s=' + str(i) + '&c=1&dc=1'
+            #print(url)
+            time.sleep(1)
+            wb_json = requests.get(url).text
+            #print(wb_json)
+            #time.sleep(1)
+            text = str(json.loads(wb_json))
+            #print(text)
+            id = re.findall(r"(\'id\':\s)([0-9]*)(,)", text)
+            for x in range(0, len(id)):
+                end_url = 'https://m.sohu.com/n/' + id[x][1] + '/'
+                url_.insert_one({'url': end_url})
+                print(end_url)
+            print(url_)
+            print(i)
+        except:
+            print("获取url失败")
+
+
+
+
+if __name__ == '__main__':
+    try:
+        t1 = Thread(target=get_end_url, args=(3, 200000, url_tiyu))
+        t1.start()
+        t2 = Thread(target=get_end_url, args=(4, 200000, url_yule))
+        t2.start()
+        t3 = Thread(target=get_end_url, args=(5, 200000, url_caijing))
+        t3.start()
+        t4 = Thread(target=get_end_url, args=(6, 200000, url_shishang))
+        t4.start()
+        t5 = Thread(target=get_end_url, args=(7, 200000, url_keji))
+        t5.start()
+        t6 = Thread(target=get_end_url, args=(8, 200000, url_junshi))
+        t6.start()
+        t7 = Thread(target=get_end_url, args=(9, 200000, url_xingzuo))
+        t7.start()
+        while t1.is_alive() | t2.is_alive() | t3.is_alive() | t4.is_alive() | t5.is_alive() | t6.is_alive() | t7.is_alive():
+            pass
+    except:
+        print("Error: 无法启动线程")
