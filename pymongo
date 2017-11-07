@@ -1,0 +1,61 @@
+import pymongo
+import pymongo.errors as mongoerr
+from datetime import datetime
+# user_doc1 = {
+#     "username" : "Mary","firstname" : "Mike","surname" : "Doe","dateofbirth" : datetime(1977, 3, 22),
+#     "email" : "maymike78@example.com", "score" : 50}
+# user_doc2 = {
+#     "username" : "Mary","firstname" : "Mike","surname" : "Doe","dateofbirth" : datetime(1977, 3, 22),
+#     "email" : "maymike78@example.com", "score" : 80}
+# user_docs = [
+#     {"username" : "janedoe","firstname" : "Jane","surname" : "Doe","dateofbirth" : datetime(1974, 1, 12),
+#     "email" : "janedoe74@example.com", "score" : 70},
+#     {"username" : "Woo","firstname" : "Mary","surname" : "Doe","dateofbirth" : datetime(1998, 4, 12),
+#     "email" : "woomary98@example.com", "score" : 80},
+#     {"username" : "lee","firstname" : "Jane","surname" : "Doe","dateofbirth" : datetime(1989, 2, 1),
+#     "email" : "janelee89@example.com", "score" : 90}]
+# connect
+client = pymongo.MongoClient('localhost', 27017)
+db = client['sohu_news']
+collection2 = db['junshi_news']
+collection3 = db['keji_news']
+collection4 = db['shishang_news']
+collection5 = db['tiyu_news']
+collection6 = db['yule_news']
+collection7 = db['xingzuo_news']
+
+#delete all rows
+# print(collection.delete_many({}))
+# collection1.remove()
+collection2.remove()
+collection3.remove()
+collection4.remove()
+collection5.remove()
+collection6.remove()
+collection7.remove()
+
+
+#insert rows
+# print(collection.insert_one(user_doc1,bypass_document_validation=True))
+# print(collection.insert_many(user_docs))
+
+# query and update
+
+print('all rows:',collection2.count({}))
+print('all rows:',collection3.count({}))
+print('all rows:',collection4.count({}))
+print('all rows:',collection5.count({}))
+print('all rows:',collection6.count({}))
+print('all rows:',collection7.count({}))
+# print('match username = janedoe rows:',collection.count({"username" : "janedoe"}))
+# print('Mary data before update:',collection.find_one({"username" : "Mary"}))
+# collection.find_one_and_replace({"username" : "May"},user_doc2)
+# print('Mary data after update:',collection.find_one({"username" : "Mary"}))
+#update insert
+# result = collection.update_one({'username':  "Mary"}, {'$set':user_doc2},upsert=True)
+# print('Mary data after insert update rows:',result.matched_count)
+
+#delete all rows
+# print('Mary data delete:',collection.delete_one({"username" : "Mary"}))
+
+client.close()
